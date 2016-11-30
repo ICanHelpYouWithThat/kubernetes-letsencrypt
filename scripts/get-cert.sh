@@ -117,14 +117,12 @@ log "Generating secret"
 apiVersion: v1
 kind: Secret
 metadata:
-  name: "$secretName"
-  namespace: "$namespace"
+  name: icanhelpyouwiththat.org
+  namespace: default
 type: Opaque
 data:
-  key.pem: "$(encodeFile key.pem)"
-  cert.pem: "$(encodeFile 0000_cert.pem)"
-  chain.pem: "$(encodeFile 0000_chain.pem)"
-  certchain.pem: "$(encodeFile 0001_chain.pem)"
+  tls.key: "$(encodeFile key.pem)"
+  tls.crt: "$(encodeFile 0001_chain.pem)"
 EOF
 ) > "$newSecretFile"
 echo "Done!"
