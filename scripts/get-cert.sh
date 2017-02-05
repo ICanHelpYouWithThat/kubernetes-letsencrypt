@@ -117,12 +117,14 @@ log "Generating secret"
 apiVersion: v1
 kind: Secret
 metadata:
-  name: icanhelpyouwiththat.org
-  namespace: default
+  name: "$secretName"-full
+  namespace: "$namespace"
 type: Opaque
 data:
-  tls.key: "$(encodeFile key.pem)"
-  tls.crt: "$(encodeFile 0001_chain.pem)"
+  key.pem: "$(encodeFile key.pem)"
+  cert.pem: "$(encodeFile 0000_cert.pem)"
+  chain.pem: "$(encodeFile 0000_chain.pem)"
+  certchain.pem: "$(encodeFile 0001_chain.pem)"
 EOF
 ) > "$newSecretFile"
 echo "Done!"
@@ -134,6 +136,8 @@ kubectl get -f "$newSecretFile" > /dev/null && (
   log "Secret does not exist, running kubectl create"
   kubectl create -f "$newSecretFile"
 )
+
+kubectl create secret tls "$secretName" --key="key.pem" --cert="0001_chain.pem"
 
 rm -rf $DIR/*.pem
 rm -rf $DIR/*.der
